@@ -6,15 +6,14 @@
 // 5 - Salve UserData no localStorage
 // 6 - Crie uma User Type Guard, para verificar se o valor de localStorage é compatível com UserData
 // 7 - Ao refresh da página, preencha os valores de localStorage (caso seja UserData) no formulário e em window.UserData
-window.UserData = {
-    nome: "",
-    email: "",
-    cpf: ""
-};
+window.UserData = {};
 function verify(input) {
-    const valor = localStorage.getItem(input.id);
-    if (valor) {
-        input.value = valor;
+    if (input.id == "nome" || input.id == "email" || input.id == "cpf") {
+        const valor = localStorage.getItem(input.id);
+        if (valor) {
+            window.UserData[`${input.id}`] = valor;
+            input.value = valor;
+        }
     }
 }
 const form = document.getElementById("form");

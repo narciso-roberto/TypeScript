@@ -8,27 +8,27 @@
 
 
 interface UserData {
-  nome:string,
-  email:string,
-  cpf:string;
+  nome?:string,
+  email?:string,
+  cpf?:string;
 }
 
 interface Window {
   UserData: UserData;
 }
 
-window.UserData = {
-  nome: "",       
-  email: "",  
-  cpf: ""  
-}
+window.UserData = {}
 
 
 function verify(input: HTMLInputElement){
-  const valor = localStorage.getItem(input.id)
-  if(valor){
-    input.value = valor;
+  if(input.id == "nome" || input.id == "email" ||input.id == "cpf"){
+    const valor = localStorage.getItem(input.id)
+    if(valor){
+      window.UserData[`${input.id}`] = valor
+      input.value = valor;
+    }
   }
+  
   
 }
 
