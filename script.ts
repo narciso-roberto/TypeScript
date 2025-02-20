@@ -14,45 +14,56 @@ interface UserData {
 }
 
 interface Window {
-  UserData: UserData;
+  UserData: any;
 }
 
 window.UserData = {}
 
-
-function verify(input: HTMLInputElement){
-  if(input.id == "nome" || input.id == "email" ||input.id == "cpf"){
-    const valor = localStorage.getItem(input.id)
-    if(valor){
-      window.UserData[`${input.id}`] = valor
-      input.value = valor;
-    }
+function JSONparse(obj: string){
+  try{
+    JSON.parse(obj)
+  }catch(e){
+    return false
   }
-  
-  
+  return true
 }
 
+function verify(obj: unknown): obj is UserData{
+  if(obj && typeof obj == "object" && ("nome" in obj || "cpf" in obj || "email" in obj)){
+    return true
+  }
+  return false
+}
 
+function autoComplete(){
+  const store = localStorage.getItem("UserData")
+  if(store && JSON.parse(store)){
+    const dados = JSON.parse(store);
+    if(verify(dados)){
+        Object.entries(dados).forEach(([chave,valor]) => {
+          window.UserData[chave] = valor;
+          const input = document.getElementById(chave) as HTMLInputElement
+          input.value = valor;
+        })
+    }
+    
+  }
+}
+
+autoComplete()
 
 const form = document.getElementById("form")
 
-function click(event:Event, value:string, id:"nome"|"email"|"cpf"){
-  window.UserData[`${id}`] = value
-  localStorage.setItem(`${id}`,value);
+function click({target}:Event){
+  if(target instanceof HTMLInputElement){ 
+    window.UserData[target.id] = target.value
+    localStorage.setItem("UserData", JSON.stringify(window.UserData))
+  }
 }
 
-if(form instanceof HTMLFormElement){
-  const forms = form.querySelectorAll("input")
+form?.addEventListener("input",click)
 
-  forms.forEach((input) => {
-    verify(input)
-    if(input.id == "nome" || input.id == "email" ||input.id == "cpf"){
-      const id: "nome"|"email"|"cpf" = input.id
 
-      input.addEventListener("input",function(even){click(even,input.value,id)})
-    }
-  })
-}
 
 
 

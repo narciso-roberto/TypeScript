@@ -7,27 +7,40 @@
 // 6 - Crie uma User Type Guard, para verificar se o valor de localStorage é compatível com UserData
 // 7 - Ao refresh da página, preencha os valores de localStorage (caso seja UserData) no formulário e em window.UserData
 window.UserData = {};
-function verify(input) {
-    if (input.id == "nome" || input.id == "email" || input.id == "cpf") {
-        const valor = localStorage.getItem(input.id);
-        if (valor) {
-            window.UserData[`${input.id}`] = valor;
-            input.value = valor;
+function JSONparse(obj) {
+    try {
+        JSON.parse(obj);
+    }
+    catch (e) {
+        return false;
+    }
+    return true;
+}
+function verify(obj) {
+    if (obj && typeof obj == "object" && ("nome" in obj || "cpf" in obj || "email" in obj)) {
+        return true;
+    }
+    return false;
+}
+function autoComplete() {
+    const store = localStorage.getItem("UserData");
+    if (store && JSON.parse(store)) {
+        const dados = JSON.parse(store);
+        if (verify(dados)) {
+            Object.entries(dados).forEach(([chave, valor]) => {
+                window.UserData[chave] = valor;
+                const input = document.getElementById(chave);
+                input.value = valor;
+            });
         }
     }
 }
+autoComplete();
 const form = document.getElementById("form");
-function click(event, value, id) {
-    window.UserData[`${id}`] = value;
-    localStorage.setItem(`${id}`, value);
+function click({ target }) {
+    if (target instanceof HTMLInputElement) {
+        window.UserData[target.id] = target.value;
+        localStorage.setItem("UserData", JSON.stringify(window.UserData));
+    }
 }
-if (form instanceof HTMLFormElement) {
-    const forms = form.querySelectorAll("input");
-    forms.forEach((input) => {
-        verify(input);
-        if (input.id == "nome" || input.id == "email" || input.id == "cpf") {
-            const id = input.id;
-            input.addEventListener("input", function (even) { click(even, input.value, id); });
-        }
-    });
-}
+form?.addEventListener("input", click);
