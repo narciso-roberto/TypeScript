@@ -1,24 +1,14 @@
 "use strict";
-function normalizarTexto(texto) {
-    return texto.trim().toLowerCase();
+async function fetchProduct() {
+    const response = await fetch('https://api.origamid.dev/json/notebook.json');
+    const data = await response.json();
+    showProduct(data);
 }
-console.log(normalizarTexto("        oi aaamiGOOOEIKKKK"));
-// const input = document.querySelector('input');
-// const total = localStorage.getItem('total');
-// if(input && total){
-//     input.value = total;
-//     calcularGanho(Number(input.value));
-// function calcularGanho(value: number) {
-//   const p = document.querySelector('p');
-//   if(p){
-//       p.innerText = `ganho total: ${value + 100 - value * 0.2}`;
-//   }
-// }
-// function totalMudou() {
-//     if(input){
-//         localStorage.setItem('total', input.value);
-//         calcularGanho(Number(input.value));
-//     }
-// }
-// input.addEventListener('keyup', totalMudou);
-// }
+fetchProduct();
+function showProduct(data) {
+    document.body.innerHTML = `
+    <div>
+      <h2>${data.nome}</h2>
+    </div>
+  `;
+}
