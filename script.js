@@ -1,18 +1,24 @@
 "use strict";
-// 1 - Faça um fetch das vendas: "https://api.origamid.dev/json/vendas.json"
-// 2 - Defina o tipo/interface de cada venda (tuple)
-// 3 - Some o total das vendas e mostre na tela
-async function pegarDados(url) {
-    const response = await fetch(url);
-    const dados = await response.json();
-    console.log(dados);
-    return dados;
+function normalizarTexto(texto) {
+    return texto.trim().toLowerCase();
 }
-async function printarDados() {
-    const data = await pegarDados("https://api.origamid.dev/json/vendas.json");
-    let soma = data.reduce((acumulador, atual) => {
-        return acumulador + atual[1];
-    }, 0);
-    document.body.innerHTML += `<h1>Total: ${soma}</h1>`;
-}
-printarDados();
+console.log(normalizarTexto("        oi aaamiGOOOEIKKKK"));
+// const input = document.querySelector('input');
+// const total = localStorage.getItem('total');
+// if(input && total){
+//     input.value = total;
+//     calcularGanho(Number(input.value));
+// function calcularGanho(value: number) {
+//   const p = document.querySelector('p');
+//   if(p){
+//       p.innerText = `ganho total: ${value + 100 - value * 0.2}`;
+//   }
+// }
+// function totalMudou() {
+//     if(input){
+//         localStorage.setItem('total', input.value);
+//         calcularGanho(Number(input.value));
+//     }
+// }
+// input.addEventListener('keyup', totalMudou);
+// }

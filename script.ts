@@ -1,59 +1,23 @@
-// 1 - Faça um fetch das vendas: "https://api.origamid.dev/json/vendas.json"
-// 2 - Defina o tipo/interface de cada venda (tuple)
-// 3 - Some o total das vendas e mostre na tela
 
 
 
-type produtos = [string,number,string,{nome:string,cor:string}]
+// 1 - Crie uma função chamada toNumber
+// 2 - A função pode receber number | string
+// 3 - Se a função receber um número, retorne um número
+// 4 - Se a função receber uma string, retorne um número
+// 5 - Se ela receber algo diferente, retorne um erro. (throw "value deve ser um número ou uma string")
 
-async function pegarDados<t>(url:string): Promise<t>{
-  const response = await fetch(url)
-  const dados = await response.json()
-  console.log(dados)
-  return dados 
+function toNumber( value: number | string){
+  if(typeof value == "number"){
+    return value
+  }
+  if(typeof value == "string"){
+    return value
+  }
+
+  throw 'value deve ser um número ou uma string';
+
 }
-
-async function printarDados(){
-  const data = await pegarDados<Array<produtos>>("https://api.origamid.dev/json/vendas.json")
-  let soma = data.reduce((acumulador,atual) =>{
-    return acumulador + atual[1];
-  },0)
-
-  document.body.innerHTML += `<h1>Total: ${soma}</h1>`
-}
-
-printarDados()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
