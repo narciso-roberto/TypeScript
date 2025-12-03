@@ -1,6 +1,14 @@
 "use strict";
-const a = document.getElementById("origamid");
-if (a instanceof HTMLAnchorElement) {
-    a.href = a.href.replace("http://", "https://");
-    console.log(a);
+const elementos = document.querySelectorAll(".link");
+function changeColor(element) {
+    element.style.color = "red";
 }
+function changeBorder(element) {
+    element.style.borderColor = "blue";
+}
+elementos.forEach((elementos) => {
+    if (elementos instanceof HTMLElement) {
+        changeBorder(elementos);
+        changeColor(elementos);
+    }
+});
