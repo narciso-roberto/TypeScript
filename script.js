@@ -1,27 +1,16 @@
 "use strict";
-// Estado dos elementos
-// menu inativo:
-// class="" em nav
-// aria-expanded="false" em button
-// aria-label="Abrir Menu" em button
-// menu ativo:
-// class="active" em nav
-// aria-expanded="true" em button
-// aria-label="Fechar Menu" em button
-const nav = document.querySelector("#nav");
-const botao = document.getElementById('btn-mobile');
-function ativarMenu(event) {
-    if (event instanceof MouseEvent) {
-        nav?.classList.toggle("active");
-    }
-    if (event.currentTarget instanceof HTMLButtonElement) {
-        if (nav?.classList.contains("active")) {
-            event.currentTarget?.setAttribute("aria-expanded", "true");
-            event.currentTarget?.setAttribute("aria-label", "true");
-            return;
-        }
-        event.currentTarget?.setAttribute("aria-expanded", "false");
-        event.currentTarget?.setAttribute("aria-label", "false");
-    }
+// Define que o retorno será um HTMLAnchorElement
+const link = document.querySelector('.link');
+link?.href;
+// async function getData<T>(url: string): Promise<T> {
+//   const response = await fetch(url);
+//   return await response.json();
+// }
+async function getData(url) {
+    const response = await fetch(url);
+    return await response.json();
 }
-botao?.addEventListener("pointerdown", ativarMenu);
+async function handleData() {
+    const notebook = await getData('https://api.origamid.dev/json/notebook.json');
+    console.log(notebook.nome);
+}

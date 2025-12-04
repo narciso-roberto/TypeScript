@@ -1,37 +1,24 @@
+// Define que o retorno será um HTMLAnchorElement
+const link = document.querySelector<HTMLAnchorElement>('.link');
+link?.href;
 
-// Estado dos elementos
+// async function getData<T>(url: string): Promise<T> {
+//   const response = await fetch(url);
+//   return await response.json();
+// }
 
-// menu inativo:
-// class="" em nav
-// aria-expanded="false" em button
-// aria-label="Abrir Menu" em button
-
-// menu ativo:
-// class="active" em nav
-// aria-expanded="true" em button
-// aria-label="Fechar Menu" em button
-
-
-
-const nav = document.querySelector("#nav")
-const botao = document.getElementById('btn-mobile');
-
-function ativarMenu(event: PointerEvent){
-  if(event instanceof MouseEvent){
-    nav?.classList.toggle("active")
-  }
-
-  if(event.currentTarget instanceof HTMLButtonElement){
-    if(nav?.classList.contains("active")){
-      event.currentTarget?.setAttribute("aria-expanded", "true")
-      event.currentTarget?.setAttribute("aria-label", "true")
-      return
-    }
-    event.currentTarget?.setAttribute("aria-expanded", "false")
-    event.currentTarget?.setAttribute("aria-label", "false")
-
-  }
+async function getData<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  return await response.json();
 }
 
+interface Notebook {
+  nome: string;
+}
 
-botao?.addEventListener("pointerdown",ativarMenu)
+async function handleData() {
+  const notebook = await getData<Notebook>(
+    'https://api.origamid.dev/json/notebook.json',
+  );
+  console.log(notebook.nome);
+}
