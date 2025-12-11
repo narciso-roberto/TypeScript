@@ -1,24 +1,59 @@
-// Define que o retorno será um HTMLAnchorElement
-const link = document.querySelector<HTMLAnchorElement>('.link');
-link?.href;
 
-// async function getData<T>(url: string): Promise<T> {
-//   const response = await fetch(url);
-//   return await response.json();
-// }
 
-async function getData<T>(url: string): Promise<T> {
-  const response = await fetch(url);
-  return await response.json();
+// 1 - Faça um fetch da API: https://api.origamid.dev/json/cursos.json
+// 2 - Defina a interface da API
+// 3 - Crie um Type Guard, que garanta que a API possui nome, horas e tags
+// 4 - Use Type Guards para garantir a Type Safety do código
+// 5 - Preencha os dados da API na tela.
+
+interface Aula{
+  nome: string,
+  horas: number,
+  aulas: number,
+  gratutitas: boolean,
+  tags: Array<string>,
+  idAulas: Array<number>,
+  nivel: string
 }
 
-interface Notebook {
-  nome: string;
+async function getData() {
+  const dados = await fetch("https://api.origamid.dev/json/cursos.json")
+  const final =  await dados.json()
+
+  preencherTela(final)
 }
 
-async function handleData() {
-  const notebook = await getData<Notebook>(
-    'https://api.origamid.dev/json/notebook.json',
-  );
-  console.log(notebook.nome);
+
+function isAula(target: unknown):target is Aula{
+  
+  if(target && typeof target == "object" && 'nome' in target && 'horas' in target && 'tags' in target){
+    return true
+  }
+
+  return false
 }
+
+getData()
+
+function preencherTela(itens: unknown) {
+  console.log(itens)
+    if(itens instanceof Array){
+
+      itens.forEach((item) => {
+        if(isAula(item)){
+          const main = document.querySelector("main")
+          if(main){
+            main.innerHTML += `
+            <div>
+              ${item.aulas}
+            </div>
+            `
+          }
+        }
+
+
+      })
+    }
+}
+
+
