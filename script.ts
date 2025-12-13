@@ -1,59 +1,77 @@
+// 1 - Crie uma interface UserData para o formulário abaixo
+// 2 - Crie uma variável global UserData no window, ela será um objeto qualquer
+// 3 - Adicione um evento de keyup ao formulário
+// 4 - Quando o evento ocorrer adicione a {[id]: value} ao UserData
+// 5 - Salve UserData no localStorage
+// 6 - Crie uma User Type Guard, para verificar se o valor de localStorage é compatível com UserData
+// 7 - Ao refresh da página, preencha os valores de localStorage (caso seja UserData) no formulário e em window.UserData
 
-
-// 1 - Faça um fetch da API: https://api.origamid.dev/json/cursos.json
-// 2 - Defina a interface da API
-// 3 - Crie um Type Guard, que garanta que a API possui nome, horas e tags
-// 4 - Use Type Guards para garantir a Type Safety do código
-// 5 - Preencha os dados da API na tela.
-
-interface Aula{
+interface UserData {
   nome: string,
-  horas: number,
-  aulas: number,
-  gratutitas: boolean,
-  tags: Array<string>,
-  idAulas: Array<number>,
-  nivel: string
+  email: string,
+  cpf: string
 }
 
-async function getData() {
-  const dados = await fetch("https://api.origamid.dev/json/cursos.json")
-  const final =  await dados.json()
-
-  preencherTela(final)
+interface Window {
+  UserData : UserData
 }
 
+window.UserData = {
+  nome: "",
+  email: "",
+  cpf: ""
+};
 
-function isAula(target: unknown):target is Aula{
-  
-  if(target && typeof target == "object" && 'nome' in target && 'horas' in target && 'tags' in target){
+function isProp(value: string): value is "cpf" | "email" | "nome"{
+  if(value == "cpf" || value == "email" || value == "nome"){
     return true
   }
-
   return false
 }
 
-getData()
-
-function preencherTela(itens: unknown) {
-  console.log(itens)
-    if(itens instanceof Array){
-
-      itens.forEach((item) => {
-        if(isAula(item)){
-          const main = document.querySelector("main")
-          if(main){
-            main.innerHTML += `
-            <div>
-              ${item.aulas}
-            </div>
-            `
-          }
-        }
-
-
-      })
-    }
+function isUserData(value: unknown): value is UserData{
+  if(value && typeof value == "object" && 'nome' in value && "cpf" in value && "email" in value){
+    return true
+  }
+  return false
 }
 
+function refreshLocal(){
+  const dataString = localStorage.getItem("userData")
+  if(dataString){
+    const dataObj = JSON.parse(dataString)
+    if(isUserData(dataObj)){
+      const campos = document.querySelectorAll("#form input")
+      campos.forEach((campo) => {
+        if(campo instanceof HTMLInputElement && isProp(campo.id)){
+          campo.value = dataObj[`${campo.id}`]
+        }
+      })
+      window.UserData = dataObj
+      
+    }
+   
+    
+  }
+}
+
+function handleKeyUp(eve: KeyboardEvent) {
+  const alvo = eve.target
+  if(alvo instanceof HTMLInputElement && isProp(alvo.id)){
+    window.UserData[`${alvo.id}`] = alvo.value
+  }
+  
+  localStorage.setItem("userData",JSON.stringify(window.UserData))
+
+}
+
+const formulario = document.querySelector<HTMLElement>("#form")
+formulario?.addEventListener("keyup",handleKeyUp)
+
+refreshLocal()
+
+
+
+
+//verificar interfaces e inviavel, pois elas nao existem em runtime... Como assim ? pq elas n existem ? oq ue isso significa ? exisem outros exemplos ?
 
