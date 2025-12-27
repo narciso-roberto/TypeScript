@@ -70,9 +70,13 @@
 //   paginas: number;
 // }
 
+// interface ObjLiteraly {
+//   [key: string]: unknown
+// }
+
 // async function handleData() {
 //   const jogo = await fetchData('/jogo.json');
-//   console.log("ui")
+
 //   if (checkInterface<Jogo>(jogo, 'nome',"ano")) {
 //     console.log(jogo)
 //   }
@@ -82,10 +86,8 @@
 // function checkInterface<T>(dado: unknown, ...props: Array<keyof T>): dado is T{
 
 //   if(dado && typeof dado == "object" && (props.every((atualValor) => atualValor in dado))){
-//     console.log("foi true")
 //     return true
 //   }
-//   console.log("foi falso")
 //   return false
 
 // }
@@ -96,16 +98,19 @@
 
 
 
+interface ObjLiteraly {
+  [key: string]: unknown
+}
 
+type ObjRecord = Record<string, unknown>
 
+function soObjt(obj: ObjLiteraly,a:string){
+ if (a in obj){
+  console.log("Existe ",a," em obj")
+ }
+}
 
-
-
-
-
-
-
-
+soObjt({"a":"ana maria"},"aa")
 
 
 
