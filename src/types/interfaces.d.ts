@@ -1,0 +1,3 @@
+interface Curso {
+  aula: string;
+}
